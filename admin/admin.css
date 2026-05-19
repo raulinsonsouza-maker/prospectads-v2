@@ -590,6 +590,11 @@ html {
 .filters--leads {
     align-items: flex-end;
     gap: 14px;
+    padding: 18px;
+    border-color: rgba(247, 166, 32, 0.2);
+    background:
+        radial-gradient(circle at top right, rgba(247, 166, 32, 0.08), transparent 42%),
+        var(--bg-card);
 }
 
 .filters__field {
@@ -603,7 +608,7 @@ html {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-light);
+    color: #b7bdc9;
 }
 
 .filters__field--grow {
@@ -619,6 +624,13 @@ html {
     padding-bottom: 2px;
 }
 
+.filters--leads input,
+.filters--leads select {
+    min-height: 42px;
+    background: rgba(7, 10, 16, 0.92);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
 .filter-export {
     display: inline-flex;
     align-items: center;
@@ -630,12 +642,13 @@ html {
     text-decoration: none;
     font-size: 0.8125rem;
     font-weight: 600;
-    transition: border-color 0.2s, color 0.2s;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
 }
 
 .filter-export:hover {
     border-color: rgba(247, 166, 32, 0.4);
     color: var(--primary-color);
+    transform: translateY(-1px);
 }
 
 .empty-state--leads {
@@ -650,10 +663,12 @@ html {
 /* Tabela CRM */
 .leads-table-wrap {
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     overflow: hidden;
     box-shadow: var(--shadow-card);
-    background: var(--bg-card);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        var(--bg-card);
 }
 
 .leads-table--crm {
@@ -661,6 +676,14 @@ html {
     border-radius: 0;
     box-shadow: none;
     margin: 0;
+}
+
+.leads-table--crm tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.leads-table--crm tbody tr:hover {
+    background: rgba(247, 166, 32, 0.08);
 }
 
 .leads-table--crm .col-date {
@@ -683,14 +706,14 @@ html {
 .lead-date__time {
     display: block;
     font-size: 0.8125rem;
-    color: var(--text-light);
+    color: #9aa4b5;
 }
 
 .lead-date__id {
     display: inline-block;
     margin-top: 4px;
     font-size: 0.75rem;
-    color: var(--text-light);
+    color: #7e8797;
     opacity: 0.8;
 }
 
@@ -703,8 +726,8 @@ html {
 
 .lead-cell__avatar {
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -714,6 +737,7 @@ html {
     color: var(--primary-color);
     background: rgba(247, 166, 32, 0.12);
     border: 1px solid rgba(247, 166, 32, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .lead-cell__body {
@@ -732,7 +756,7 @@ html {
 
 .lead-cell__store {
     font-size: 0.8125rem;
-    color: var(--text-light);
+    color: #a7afbd;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -753,9 +777,15 @@ html {
 }
 
 .lead-invest {
-    font-size: 0.8125rem;
-    line-height: 1.45;
-    color: var(--text-gray);
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: #d8deea;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(14, 19, 30, 0.9);
 }
 
 /* Ações por lead */
@@ -764,6 +794,10 @@ html {
     flex-direction: column;
     gap: 8px;
     min-width: 0;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(9, 13, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .lead-actions__toolbar {
@@ -779,18 +813,20 @@ html {
     gap: 6px;
     padding: 8px 12px;
     border-radius: var(--radius-sm);
-    background: #25d366;
+    background: linear-gradient(135deg, #21c45b, #1daf50);
     color: #fff;
     text-decoration: none;
     font-size: 0.75rem;
     font-weight: 700;
     flex-shrink: 0;
-    transition: filter 0.2s, transform 0.15s;
+    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+    transition: filter 0.2s, transform 0.15s, box-shadow 0.15s;
 }
 
 .lead-actions__wa:hover {
     filter: brightness(1.08);
     transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(37, 211, 102, 0.42);
 }
 
 .lead-actions__wa span {
@@ -806,11 +842,11 @@ html {
 .lead-actions__status {
     flex: 1;
     min-width: 110px;
-    max-width: 140px;
+    max-width: 150px;
     padding: 8px 10px;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
-    background: var(--bg-gray);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    background: rgba(6, 10, 16, 0.92);
     color: var(--text-dark);
     font-size: 0.8125rem;
     font-family: inherit;
@@ -827,7 +863,7 @@ html {
     background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
     color: #fff;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(247, 166, 32, 0.2);
+    box-shadow: 0 3px 12px rgba(247, 166, 32, 0.3);
     transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -838,8 +874,8 @@ html {
 
 .lead-notes {
     border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
-    background: var(--bg-gray);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(7, 10, 16, 0.86);
     overflow: hidden;
 }
 
@@ -849,7 +885,7 @@ html {
     padding: 8px 12px;
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: #aab3c2;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -900,7 +936,7 @@ html {
 }
 
 .lead-notes textarea::placeholder {
-    color: var(--text-light);
+    color: #8893a7;
 }
 
 /* Legado (blog / outros) */
