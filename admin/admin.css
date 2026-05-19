@@ -813,20 +813,21 @@ html {
     gap: 6px;
     padding: 8px 12px;
     border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, #21c45b, #1daf50);
-    color: #fff;
+    background: rgba(37, 211, 102, 0.14);
+    border: 1px solid rgba(37, 211, 102, 0.45);
+    color: #9af3bc;
     text-decoration: none;
     font-size: 0.75rem;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     transition: filter 0.2s, transform 0.15s, box-shadow 0.15s;
 }
 
 .lead-actions__wa:hover {
-    filter: brightness(1.08);
+    filter: brightness(1.05);
     transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(37, 211, 102, 0.42);
+    box-shadow: 0 6px 14px rgba(37, 211, 102, 0.2);
 }
 
 .lead-actions__wa span {
