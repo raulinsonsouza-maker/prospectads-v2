@@ -126,5 +126,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-console.log('ProspectAds - Landing Page carregada com sucesso!');
-

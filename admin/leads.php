@@ -145,10 +145,10 @@ ob_start();
                     ?>
                     <tr>
                         <td class="col-date" data-label="Data">
-                            <time datetime="<?= htmlspecialchars($lead['created_at']) ?>">
-                                <?= htmlspecialchars(date('d/m/Y', strtotime($lead['created_at']))) ?>
+                            <time datetime="<?= htmlspecialchars(format_lead_datetime_attr((string) $lead['created_at'])) ?>">
+                                <?= htmlspecialchars(format_lead_date((string) $lead['created_at'])) ?>
                             </time>
-                            <span class="lead-date__time"><?= htmlspecialchars(date('H:i', strtotime($lead['created_at']))) ?></span>
+                            <span class="lead-date__time"><?= htmlspecialchars(format_lead_time((string) $lead['created_at'])) ?></span>
                             <span class="lead-date__id">#<?= (int) $lead['id'] ?></span>
                         </td>
                         <td class="col-lead" data-label="Lead">

@@ -489,6 +489,95 @@ function csrf_field(): string
     return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(csrf_token()) . '">';
 }
 
+/** Fuso para exibição de datas (leads, admin). Padrão: Brasil. */
+function app_timezone(): DateTimeZone
+{
+    static $tz = null;
+    if ($tz instanceof DateTimeZone) {
+        return $tz;
+    }
+
+    $name = 'America/Sao_Paulo';
+    try {
+        $config = load_config();
+        $name = (string) ($config['timezone'] ?? $name);
+    } catch (Throwable) {
+        // CLI sem config
+    }
+
+    $tz = new DateTimeZone($name);
+
+    return $tz;
+}
+
+/** Momento atual em UTC para gravar no SQLite (legado datetime sem fuso). */
+function utc_now(): string
+{
+    return gmdate('Y-m-d H:i:s');
+}
+
+function parse_stored_datetime(string $stored): ?DateTimeImmutable
+{
+    $stored = trim($stored);
+    if ($stored === '') {
+        return null;
+    }
+
+    if (preg_match('/[TZ+\-]/', $stored) === 1) {
+        try {
+            return new DateTimeImmutable($stored);
+        } catch (Exception) {
+            return null;
+        }
+    }
+
+    try {
+        return new DateTimeImmutable($stored, new DateTimeZone('UTC'));
+    } catch (Exception) {
+        return null;
+    }
+}
+
+function format_lead_date(string $stored): string
+{
+    $dt = parse_stored_datetime($stored);
+    if ($dt === null) {
+        return '';
+    }
+
+    return $dt->setTimezone(app_timezone())->format('d/m/Y');
+}
+
+function format_lead_time(string $stored): string
+{
+    $dt = parse_stored_datetime($stored);
+    if ($dt === null) {
+        return '';
+    }
+
+    return $dt->setTimezone(app_timezone())->format('H:i');
+}
+
+function format_lead_datetime_csv(string $stored): string
+{
+    $dt = parse_stored_datetime($stored);
+    if ($dt === null) {
+        return $stored;
+    }
+
+    return $dt->setTimezone(app_timezone())->format('d/m/Y H:i');
+}
+
+function format_lead_datetime_attr(string $stored): string
+{
+    $dt = parse_stored_datetime($stored);
+    if ($dt === null) {
+        return $stored;
+    }
+
+    return $dt->setTimezone(app_timezone())->format(DateTimeInterface::ATOM);
+}
+
 function format_blog_date(?string $iso): string
 {
     if ($iso === null || $iso === '') {

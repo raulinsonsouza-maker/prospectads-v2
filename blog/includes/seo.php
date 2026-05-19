@@ -48,15 +48,8 @@ function blog_author_schema(): array
 
 function blog_render_gtag(): void
 {
-    ?>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6Y2YB8KS0F"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6Y2YB8KS0F');
-    </script>
-    <?php
+    require_once dirname(__DIR__, 2) . '/includes/site-gtag.php';
+    site_render_gtag();
 }
 
 function blog_render_head_common(string $title, string $description, string $canonical, string $type = 'website'): void

@@ -11,6 +11,8 @@ return [
     // Gere com: php -r "echo password_hash('SUA_SENHA_FORTE', PASSWORD_DEFAULT);"
     'admin_password_hash' => '$2y$10$REPLACE_WITH_PASSWORD_HASH',
     'db_path' => dirname(__DIR__) . '/data/leads.sqlite',
+    // Fuso para exibir datas no painel (leads, export CSV)
+    'timezone' => 'America/Sao_Paulo',
     'session_lifetime' => 28800,
     'allowed_origins' => [
         'https://prospectads.com.br',

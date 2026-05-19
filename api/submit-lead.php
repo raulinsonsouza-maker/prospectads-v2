@@ -59,7 +59,7 @@ check_rate_limit($ip);
 
 $stmt = $pdo->prepare(
     'INSERT INTO leads (nome, whatsapp, loja, investimento, status, ip, user_agent, created_at)
-     VALUES (:nome, :whatsapp, :loja, :investimento, :status, :ip, :user_agent, datetime("now"))'
+     VALUES (:nome, :whatsapp, :loja, :investimento, :status, :ip, :user_agent, :created_at)'
 );
 
 $stmt->execute([
@@ -70,6 +70,7 @@ $stmt->execute([
     ':status' => 'novo',
     ':ip' => $ip,
     ':user_agent' => substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500),
+    ':created_at' => utc_now(),
 ]);
 
 json_response([
