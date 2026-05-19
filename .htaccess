@@ -38,3 +38,30 @@
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
+# SEO — LPs locais removidas (implementação antiga)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^agencia-marketing-digital-americana/?$ / [R=301,L]
+    RewriteRule ^agencia-marketing-digital-limeira/?$ / [R=301,L]
+    RewriteRule ^agencia-marketing-digital-piracicaba/?$ / [R=301,L]
+</IfModule>
+
+# Sitemap XML (alias)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+</IfModule>
+
+# Blog — categorias e artigos (fallback se /blog/.htaccess não aplicar)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^blog/categoria/([a-z0-9][a-z0-9-]*)/?$ blog/category.php?slug=$1 [L,QSA]
+    RewriteCond %{THE_REQUEST} \s/blog/post\.php[\s?] [NC]
+    RewriteCond %{QUERY_STRING} (^|&)slug=([a-z0-9][a-z0-9-]*)
+    RewriteRule ^blog/post\.php$ /blog/%2/ [R=301,L]
+    RewriteCond %{THE_REQUEST} \s/blog/category\.php[\s?] [NC]
+    RewriteCond %{QUERY_STRING} (^|&)slug=([a-z0-9][a-z0-9-]*)
+    RewriteRule ^blog/category\.php$ /blog/categoria/%2/ [R=301,L]
+    RewriteRule ^blog/([a-z0-9][a-z0-9-]+)/?$ blog/post.php?slug=$1 [L,QSA]
+</IfModule>
+
