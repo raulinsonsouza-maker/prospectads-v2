@@ -7,6 +7,8 @@ declare(strict_types=1);
  * @var string $activeNav leads|posts|categories
  * @var string $content
  * @var string|null $pageSubtitle
+ * @var string|null $pageActions HTML opcional (botões no cabeçalho da página)
+ * @var string|null $adminBodyClass classes extras no &lt;body&gt;
  */
 
 if (!isset($pageTitle, $activeNav, $content)) {
@@ -14,6 +16,8 @@ if (!isset($pageTitle, $activeNav, $content)) {
 }
 
 $pageSubtitle = $pageSubtitle ?? '';
+$pageActions = $pageActions ?? '';
+$adminBodyClass = $adminBodyClass ?? '';
 
 $navItems = [
     'leads' => ['label' => 'Leads', 'href' => admin_url('leads.php')],
@@ -36,7 +40,7 @@ $siteRoot = admin_in_blog_subdir() ? '../../' : '../';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= htmlspecialchars(admin_url('admin.css')) ?>">
 </head>
-<body class="admin-body">
+<body class="admin-body<?= $adminBodyClass !== '' ? ' ' . htmlspecialchars($adminBodyClass) : '' ?>">
     <div class="admin-bg" aria-hidden="true"></div>
 
     <header class="admin-header">
@@ -58,14 +62,17 @@ $siteRoot = admin_in_blog_subdir() ? '../../' : '../';
 
     <main class="admin-main">
         <div class="admin-container">
-            <header class="admin-page-head">
-                <div>
+            <header class="admin-page-head<?= $pageActions !== '' ? ' admin-page-head--with-actions' : '' ?>">
+                <div class="admin-page-head__main">
                     <p class="admin-page-head__eyebrow">Painel ProspectAds</p>
                     <h1 class="admin-page-head__title"><?= htmlspecialchars($pageTitle) ?></h1>
                     <?php if ($pageSubtitle !== ''): ?>
                         <p class="admin-page-head__subtitle"><?= htmlspecialchars($pageSubtitle) ?></p>
                     <?php endif; ?>
                 </div>
+                <?php if ($pageActions !== ''): ?>
+                    <div class="admin-page-head__actions"><?= $pageActions ?></div>
+                <?php endif; ?>
             </header>
             <?= $content ?>
         </div>
