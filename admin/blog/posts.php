@@ -35,10 +35,86 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $posts = $stmt->fetchAll();
 
+$stats = [
+    'total_posts' => 0,
+    'published_posts' => 0,
+    'draft_posts' => 0,
+    'trash_posts' => 0,
+    'total_views' => 0,
+];
+$statsRow = $pdo->query(
+    "SELECT
+        COUNT(*) AS total_posts,
+        SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published_posts,
+        SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft_posts,
+        SUM(CASE WHEN status = 'trash' THEN 1 ELSE 0 END) AS trash_posts,
+        SUM(COALESCE(view_count, 0)) AS total_views
+     FROM blog_posts"
+)->fetch();
+if (is_array($statsRow)) {
+    $stats = array_merge($stats, $statsRow);
+}
+
+$publishedCount = (int) ($stats['published_posts'] ?? 0);
+$totalViews = (int) ($stats['total_views'] ?? 0);
+$avgViews = $publishedCount > 0 ? (int) round($totalViews / $publishedCount) : 0;
+
+$visiblePostsCount = count($posts);
+$visibleViews = 0;
+foreach ($posts as $postRow) {
+    $visibleViews += (int) ($postRow['view_count'] ?? 0);
+}
+
+$topPostStmt = $pdo->query(
+    "SELECT slug, title, view_count
+     FROM blog_posts
+     WHERE status = 'published'
+     ORDER BY view_count DESC, id DESC
+     LIMIT 1"
+);
+$topPost = $topPostStmt ? $topPostStmt->fetch() : null;
+
 $flash = (string) ($_GET['msg'] ?? '');
 
 ob_start();
 ?>
+<section class="admin-stats posts-hero-stats" aria-label="Resumo de desempenho dos posts">
+    <article class="stat-card">
+        <strong><?= number_format((int) ($stats['published_posts'] ?? 0), 0, ',', '.') ?></strong>
+        <span>Posts publicados</span>
+    </article>
+    <article class="stat-card">
+        <strong><?= number_format((int) ($stats['draft_posts'] ?? 0), 0, ',', '.') ?></strong>
+        <span>Rascunhos</span>
+    </article>
+    <article class="stat-card">
+        <strong><?= number_format($totalViews, 0, ',', '.') ?></strong>
+        <span>Total de visualizações</span>
+    </article>
+    <article class="stat-card">
+        <strong><?= number_format($avgViews, 0, ',', '.') ?></strong>
+        <span>Média de views por post publicado</span>
+    </article>
+    <article class="stat-card stat-card--spotlight">
+        <?php if (is_array($topPost)): ?>
+            <strong><?= number_format((int) ($topPost['view_count'] ?? 0), 0, ',', '.') ?></strong>
+            <span>Post com maior audiência</span>
+            <a class="stat-card__meta-link" href="/blog/<?= htmlspecialchars((string) $topPost['slug']) ?>/" target="_blank" rel="noopener">
+                <?= htmlspecialchars((string) $topPost['title']) ?>
+            </a>
+        <?php else: ?>
+            <strong>0</strong>
+            <span>Post com maior audiência</span>
+            <small class="stat-card__meta">Publique artigos para começar a medir.</small>
+        <?php endif; ?>
+    </article>
+</section>
+
+<p class="posts-hero-summary">
+    Exibindo <strong><?= number_format($visiblePostsCount, 0, ',', '.') ?></strong> posts no filtro atual,
+    com <strong><?= number_format($visibleViews, 0, ',', '.') ?></strong> visualizações acumuladas.
+</p>
+
 <div class="admin-toolbar">
     <a href="post-edit.php" class="btn-primary-link">+ Adicionar novo post</a>
 </div>

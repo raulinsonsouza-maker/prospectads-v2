@@ -255,6 +255,48 @@ html {
     margin-bottom: 28px;
 }
 
+.posts-hero-stats {
+    margin-bottom: 14px;
+}
+
+.stat-card--spotlight {
+    background:
+        radial-gradient(circle at top right, rgba(247, 166, 32, 0.12), transparent 46%),
+        var(--bg-card);
+    border-color: rgba(247, 166, 32, 0.3);
+}
+
+.stat-card__meta-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--text-dark);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(247, 166, 32, 0.45);
+}
+
+.stat-card__meta-link:hover {
+    color: var(--primary-color);
+}
+
+.stat-card__meta {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.posts-hero-summary {
+    margin: 0 0 18px;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.posts-hero-summary strong {
+    color: var(--text-dark);
+}
+
 .stat-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
