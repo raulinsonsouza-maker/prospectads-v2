@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 function site_favicon_href(): string
 {
-    return '/favicon.svg?v=2';
+    return '/favicon.svg?v=3';
 }
 
 function site_render_favicon(): void

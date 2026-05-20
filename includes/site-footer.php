@@ -29,8 +29,9 @@ function site_footer_render(string $base = '/', array $options = []): void
     $year = (int) date('Y');
     ?>
     <footer class="site-footer" role="contentinfo">
-        <div class="container site-footer__inner">
-            <div class="site-footer__main">
+        <div class="site-footer__inner">
+            <div class="site-footer__wrap">
+                <div class="site-footer__main">
                 <div class="site-footer__brand">
                     <a href="<?= htmlspecialchars($home) ?>" class="site-footer__logo">
                         <span class="site-footer__logo-text">ProspectAds</span>
@@ -59,9 +60,9 @@ function site_footer_render(string $base = '/', array $options = []): void
                         </a>
                     </address>
                 </div>
-            </div>
+                </div>
 
-            <div class="site-footer__bar">
+                <div class="site-footer__bar">
                 <p class="site-footer__copy">&copy; <?= $year ?> ProspectAds. Todos os direitos reservados.</p>
                 <?php if ($privacyModal): ?>
                     <nav class="site-footer__legal" aria-label="Legal">
@@ -70,6 +71,7 @@ function site_footer_render(string $base = '/', array $options = []): void
                         <a href="#" class="modal-trigger" data-modal="terms">Termos</a>
                     </nav>
                 <?php endif; ?>
+                </div>
             </div>
         </div>
     </footer>
