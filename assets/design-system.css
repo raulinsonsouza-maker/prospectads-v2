@@ -790,41 +790,102 @@ body.nav-open .nav__toggle-bar:nth-child(3) {
 @media (max-width: 900px) {
     .site-footer__main {
         grid-template-columns: 1fr;
-        gap: 36px;
+        gap: 40px;
+        justify-content: stretch;
     }
 
     .site-footer__brand {
         max-width: none;
+        align-items: center;
+        text-align: center;
     }
 
     .site-footer__col {
-        justify-self: start;
+        justify-self: stretch;
         min-width: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .site-footer__heading {
+        text-align: center;
+    }
+
+    .site-footer__contacts {
+        align-items: center;
+    }
+
+    .site-footer__contact-link {
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+        padding: 12px 16px;
+        border-radius: var(--pa-radius-sm);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .site-footer__contact-link span {
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    .site-footer__bar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
     }
 }
 
 @media (max-width: 640px) {
     .site-footer {
         margin-top: 0;
-    }
-
-    .site-footer__main {
-        grid-template-columns: 1fr;
-        gap: 36px;
-    }
-
-    .site-footer__brand {
-        grid-column: auto;
-    }
-
-    .site-footer__bar {
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .site-footer__inner {
-        padding-top: 44px;
+        padding: 48px 20px calc(88px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .site-footer__main {
+        gap: 32px;
+    }
+
+    .site-footer__logo-text {
+        font-size: 1.5rem;
+    }
+
+    .site-footer__tagline {
+        font-size: var(--pa-text-sm);
+        line-height: 1.6;
+        padding: 0 4px;
+    }
+
+    .site-footer__contacts {
+        gap: 10px;
+        width: 100%;
+    }
+
+    .site-footer__contact-link {
+        width: 100%;
+        max-width: 340px;
+        box-sizing: border-box;
+        font-size: var(--pa-text-base);
+    }
+
+    .site-footer__bar {
+        margin-top: 36px;
+        padding-top: 20px;
+        width: 100%;
+    }
+
+    .site-footer__copy {
+        font-size: var(--pa-text-xs);
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 

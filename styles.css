@@ -3233,23 +3233,60 @@
     }
 
     .contact {
-        padding: 80px 0 56px;
+        padding: 72px 0 48px;
     }
 
     .contact__content {
-        padding: 50px 30px;
-        border-radius: 20px;
+        padding: 36px 20px;
+        border-radius: 16px;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        box-sizing: border-box;
     }
 
     .contact .section__title {
-        font-size: 32px;
-        margin-bottom: 20px;
+        font-size: 28px;
+        margin-bottom: 16px;
+        padding: 0;
     }
 
     .contact__description {
-        font-size: 17px;
-        margin-bottom: 40px;
-        line-height: 1.7;
+        font-size: 16px;
+        margin-bottom: 32px;
+        line-height: 1.65;
+        padding: 0;
+    }
+
+    .contact__cta {
+        width: 100%;
+        gap: 16px;
+    }
+
+    .contact__cta .btn--large {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .contact__pricing {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+        width: 100%;
+        margin: 0;
+    }
+
+    .contact__pricing strong {
+        display: block;
+    }
+
+    .contact__pricing .contact__transparency {
+        display: block;
+        max-width: 300px;
+        line-height: 1.5;
     }
 
     .btn--whatsapp {
