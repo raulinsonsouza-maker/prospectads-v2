@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 2) . '/includes/site-brand.php';
 require_once dirname(__DIR__, 2) . '/includes/site-footer.php';
+require_once dirname(__DIR__, 2) . '/includes/site-header.php';
 
 function blog_footer(): void
 {
+    site_nav_script();
     site_footer_render('/');
 }
 

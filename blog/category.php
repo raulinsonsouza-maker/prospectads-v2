@@ -106,29 +106,7 @@ $metaDesc = $catDesc !== ''
 
 <body class="blog-index blog-category">
 
-    <header class="header">
-
-        <nav class="nav container">
-
-            <div class="nav__logo">
-
-                <?php site_brand_link('/'); ?>
-
-            </div>
-
-            <ul class="nav__menu" id="nav-menu">
-
-                <li><a href="/#servicos">Serviços</a></li>
-
-                <li><a href="/blog/">Blog</a></li>
-
-                <li><a href="/ecommerce-analise/" class="btn btn--primary btn--header">Análise e-commerce</a></li>
-
-            </ul>
-
-        </nav>
-
-    </header>
+    <?php site_header_render('/', site_nav_default_items(true)); ?>
 
 
 

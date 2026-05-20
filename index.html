@@ -107,14 +107,19 @@
     <div class="pa-page-bg" aria-hidden="true"></div>
     <!-- Header -->
     <header class="header">
-        <nav class="nav container">
+        <nav class="nav container" aria-label="Principal">
             <div class="nav__logo">
                 <a href="/" class="site-brand"><span class="site-brand__name">ProspectAds</span></a>
             </div>
-            <ul class="nav__menu" id="nav-menu">
+            <button type="button" class="nav__toggle" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Abrir menu de navegação">
+                <span class="nav__toggle-bar" aria-hidden="true"></span>
+                <span class="nav__toggle-bar" aria-hidden="true"></span>
+                <span class="nav__toggle-bar" aria-hidden="true"></span>
+            </button>
+            <ul class="nav__menu" id="site-nav-menu">
                 <li><a href="#servicos">Serviços</a></li>
                 <li><a href="blog/">Blog</a></li>
-                <li><a href="ecommerce-analise/" class="btn btn--primary btn--header">Análise e-commerce</a></li>
+                <li><a href="ecommerce-analise/" class="btn btn--primary btn--header"><span class="nav__label nav__label--full">Análise e-commerce</span><span class="nav__label nav__label--short">Análise</span></a></li>
             </ul>
         </nav>
     </header>
@@ -495,6 +500,7 @@
         </svg>
     </a>
 
+    <script src="assets/site-nav.js" defer></script>
     <script src="script.js" defer></script>
 </body>
 </html>

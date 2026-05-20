@@ -55,18 +55,7 @@ $ogImage = !empty($post['featured_image']) ? $base . $post['featured_image'] : b
     <?php blog_head_styles(); ?>
 </head>
 <body class="blog-article">
-    <header class="header">
-        <nav class="nav container">
-            <div class="nav__logo">
-                <?php site_brand_link('/'); ?>
-            </div>
-            <ul class="nav__menu">
-                <li><a href="/#servicos">Serviços</a></li>
-                <li><a href="/blog/">Blog</a></li>
-                <li><a href="/ecommerce-analise/" class="btn btn--primary btn--header">Análise e-commerce</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php site_header_render('/'); ?>
 
     <main class="article-page">
         <header class="blog-hero">

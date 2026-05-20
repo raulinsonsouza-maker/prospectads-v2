@@ -1183,4 +1183,36 @@
     .blog-related__grid {
         grid-template-columns: 1fr;
     }
+
+    .blog-breadcrumb {
+        font-size: 0.8125rem;
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .blog-hero__title--article {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+        line-height: 1.25;
+    }
+
+    .article__body blockquote {
+        padding: 24px 20px;
+    }
+
+    .article__body blockquote a {
+        width: 100%;
+        justify-content: center;
+        min-height: 48px;
+    }
+
+    .article-layout {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .blog-hero__topics a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
 }
