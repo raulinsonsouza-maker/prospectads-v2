@@ -20,6 +20,24 @@ $files = glob(__DIR__ . '/blog-articles/articles-*.php') ?: [];
 $errors = [];
 $linkCount = [];
 
+$stmt = $pdo->query("SELECT slug, content_html FROM blog_posts WHERE status = 'published'");
+while ($row = $stmt->fetch()) {
+    $postSlug = (string) $row['slug'];
+    $html = blog_prepare_post_content((string) $row['content_html'], $pdo);
+    if (preg_match_all('#<a\b([^>]*)>(.*?)</a>#is', $html, $anchors, PREG_SET_ORDER)) {
+        foreach ($anchors as $a) {
+            if (!preg_match('/\bhref\s*=\s*(["\'])([^"\']+)\1/i', $a[1], $hm)) {
+                $errors[] = "post {$postSlug}: âncora sem href → " . strip_tags($a[2]);
+                continue;
+            }
+            $href = $hm[2];
+            if (preg_match('#^/blog/([a-z0-9-]+)/?$#', $href, $sm) && !isset($publishedMap[$sm[1]])) {
+                $errors[] = "post {$postSlug}: link quebrado → {$href}";
+            }
+        }
+    }
+}
+
 foreach ($files as $file) {
     $content = file_get_contents($file);
     if ($content === false) {
@@ -29,7 +47,7 @@ foreach ($files as $file) {
         foreach ($m[1] as $slug) {
             $linkCount[$slug] = ($linkCount[$slug] ?? 0) + 1;
             if (!isset($publishedMap[$slug])) {
-                $errors[] = basename($file) . ": link quebrado → /blog/{$slug}/";
+                $errors[] = basename($file) . ": link quebrado no fonte → /blog/{$slug}/";
             }
         }
     }

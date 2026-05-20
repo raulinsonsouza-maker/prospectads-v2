@@ -47,7 +47,7 @@ function seed_post(PDO $pdo, array $post): void
         return;
     }
 
-    $content = sanitize_post_html($post['content_html']);
+    $content = blog_prepare_post_content($post['content_html'], $pdo);
     $reading = estimate_reading_time($content);
     $now = gmdate('c');
     $publishedAt = $post['published_at'] ?? '2026-05-01T12:00:00+00:00';

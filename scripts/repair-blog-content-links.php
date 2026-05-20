@@ -6,16 +6,20 @@ declare(strict_types=1);
  * Corrige content_html com âncoras sem href e re-sincroniza lotes PHP quando pedido.
  * Uso:
  *   php scripts/repair-blog-content-links.php
+ *   php scripts/repair-blog-content-links.php --sync=all
  *   php scripts/repair-blog-content-links.php --sync=31-40
  */
 
 $root = dirname(__DIR__);
 require $root . '/api/bootstrap.php';
 
-$syncArg = null;
+$syncArg = 'all';
 foreach ($argv as $arg) {
     if (str_starts_with($arg, '--sync=')) {
         $syncArg = substr($arg, 7);
+    }
+    if ($arg === '--no-sync') {
+        $syncArg = null;
     }
 }
 
@@ -34,7 +38,7 @@ $fixed = 0;
 
 while ($row = $stmt->fetch()) {
     $before = (string) $row['content_html'];
-    $after = blog_restore_content_links($before, $pdo);
+    $after = blog_prepare_post_content($before, $pdo);
     if ($after === $before) {
         continue;
     }

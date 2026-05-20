@@ -436,47 +436,45 @@ function sanitize_post_html(string $html): string
     $allowed = '<p><br><h2><h3><ul><ol><li><a><strong><em><blockquote>';
     $html = strip_tags($html, $allowed);
 
-    $dom = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $wrapped = '<?xml encoding="utf-8" ?><div>' . $html . '</div>';
-    $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    libxml_clear_errors();
-
-    $anchors = [];
-    foreach ($dom->getElementsByTagName('a') as $anchor) {
-        $anchors[] = $anchor;
-    }
-
-    foreach ($anchors as $anchor) {
-        $href = trim($anchor->getAttribute('href'));
-        if ($href === '' || !preg_match('~^(https?:|mailto:|tel:|/|#)~i', $href)) {
-            $parent = $anchor->parentNode;
-            if ($parent instanceof DOMElement) {
-                while ($anchor->firstChild) {
-                    $parent->insertBefore($anchor->firstChild, $anchor);
-                }
-                $parent->removeChild($anchor);
+    $html = preg_replace_callback(
+        '/<a\s+([^>]*)>(.*?)<\/a>/is',
+        static function (array $match): string {
+            $inner = $match[2];
+            if (!preg_match('/\bhref\s*=\s*(["\'])([^"\']+)\1/i', $match[1], $hrefMatch)) {
+                return $inner;
             }
-            continue;
-        }
 
-        $anchor->setAttribute('rel', 'noopener noreferrer');
-        if (preg_match('#^https?://#i', $href)) {
-            $anchor->setAttribute('target', '_blank');
-        }
-    }
+            $href = trim($hrefMatch[2]);
+            if ($href === '' || !preg_match('~^(https?:|mailto:|tel:|/|#)~i', $href)) {
+                return $inner;
+            }
 
-    $root = $dom->getElementsByTagName('div')->item(0);
-    if (!$root) {
-        return '';
-    }
+            $attrs = ' rel="noopener noreferrer"';
+            if (preg_match('#^https?://#i', $href)) {
+                $attrs .= ' target="_blank"';
+            }
 
-    $inner = '';
-    foreach ($root->childNodes as $child) {
-        $inner .= $dom->saveHTML($child);
-    }
+            return '<a href="' . htmlspecialchars($href, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"' . $attrs . '>' . $inner . '</a>';
+        },
+        $html
+    );
 
-    return trim($inner);
+    return trim($html);
+}
+
+function blog_normalize_link_label(string $text): string
+{
+    $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = utf8_strtolower(trim($text));
+    $normalized = preg_replace('/\s+/u', ' ', $text);
+
+    return rtrim($normalized === null ? $text : $normalized, ".,;:!?…");
+}
+
+/** Restaura href quebrados, depois sanitiza (ordem importa: sanitize antes remove âncoras sem href). */
+function blog_prepare_post_content(string $html, ?PDO $pdo = null): string
+{
+    return sanitize_post_html(blog_restore_content_links($html, $pdo));
 }
 
 /**
@@ -498,78 +496,88 @@ function blog_restore_content_links(string $html, ?PDO $pdo = null): string
     }
 
     $titleMap = [];
+    $publishedSlugs = [];
     if ($pdo instanceof PDO) {
         $stmt = $pdo->query("SELECT slug, title FROM blog_posts WHERE status = 'published'");
         while ($row = $stmt->fetch()) {
             $slug = (string) $row['slug'];
-            $title = utf8_strtolower(trim((string) $row['title']));
-            if ($slug !== '' && $title !== '') {
+            if ($slug === '') {
+                continue;
+            }
+            $publishedSlugs[$slug] = true;
+            $title = blog_normalize_link_label((string) $row['title']);
+            if ($title !== '') {
                 $titleMap[$title] = $slug;
             }
         }
     }
 
-    $dom = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $wrapped = '<?xml encoding="utf-8" ?><div>' . $html . '</div>';
-    $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    libxml_clear_errors();
+    return preg_replace_callback(
+        '/<a\s+([^>]*)>(.*?)<\/a>/is',
+        static function (array $match) use ($labelMap, $titleMap, $publishedSlugs): string {
+            $attrs = $match[1];
+            $inner = $match[2];
+            $href = '';
+            if (preg_match('/\bhref\s*=\s*(["\'])([^"\']+)\1/i', $attrs, $hrefMatch)) {
+                $href = trim($hrefMatch[2]);
+            }
 
-    $root = $dom->getElementsByTagName('div')->item(0);
-    if (!$root) {
-        return $html;
-    }
+            if ($href !== '' && preg_match('~^(https?:|mailto:|tel:|/|#)~i', $href)) {
+                if (!str_contains($attrs, 'rel=')) {
+                    $attrs .= ' rel="noopener noreferrer"';
+                }
+                if (preg_match('#^https?://#i', $href) && !str_contains($attrs, 'target=')) {
+                    $attrs .= ' target="_blank"';
+                }
 
-    $anchors = [];
-    foreach ($root->getElementsByTagName('a') as $anchor) {
-        $anchors[] = $anchor;
-    }
+                return '<a ' . trim($attrs) . '>' . $inner . '</a>';
+            }
 
-    foreach ($anchors as $anchor) {
-        $href = trim($anchor->getAttribute('href'));
-        if ($href !== '' && preg_match('~^(https?:|mailto:|tel:|/|#)~i', $href)) {
-            continue;
-        }
+            $key = blog_normalize_link_label($inner);
+            if ($key === '') {
+                return $inner;
+            }
 
-        $text = trim($anchor->textContent ?? '');
-        if ($text === '') {
-            continue;
-        }
-
-        $key = utf8_strtolower($text);
-        $resolved = $labelMap[$key] ?? '';
-
-        if ($resolved === '' && str_contains($key, 'solicitar') && str_contains($key, 'análise')) {
-            $resolved = '/ecommerce-analise/';
-        } elseif ($resolved !== '') {
-            $resolved = blog_post_path($resolved);
-        } elseif ($titleMap !== []) {
-            if (isset($titleMap[$key])) {
+            $resolved = '';
+            if (isset($labelMap[$key])) {
+                $resolved = blog_post_path($labelMap[$key]);
+            } elseif (str_contains($key, 'solicitar') && str_contains($key, 'análise')) {
+                $resolved = '/ecommerce-analise/';
+            } elseif (isset($titleMap[$key])) {
                 $resolved = blog_post_path($titleMap[$key]);
             } else {
+                $bestSlug = '';
+                $bestLen = 0;
                 foreach ($titleMap as $title => $slug) {
-                    if (str_contains($title, $key) || str_contains($key, $title)) {
-                        $resolved = blog_post_path($slug);
-                        break;
+                    if ($key === $title || str_contains($title, $key) || str_contains($key, $title)) {
+                        $len = strlen($title);
+                        if ($len > $bestLen) {
+                            $bestLen = $len;
+                            $bestSlug = $slug;
+                        }
                     }
                 }
+                if ($bestSlug !== '') {
+                    $resolved = blog_post_path($bestSlug);
+                }
             }
-        }
 
-        if ($resolved === '') {
-            continue;
-        }
+            if ($resolved === '') {
+                $guess = slugify($plainText !== '' ? $plainText : $key);
+                if ($guess !== '' && isset($publishedSlugs[$guess])) {
+                    $resolved = blog_post_path($guess);
+                }
+            }
 
-        $anchor->setAttribute('href', $resolved);
-        $anchor->setAttribute('rel', 'noopener noreferrer');
-    }
+            if ($resolved === '') {
+                return $inner;
+            }
 
-    $inner = '';
-    foreach ($root->childNodes as $child) {
-        $inner .= $dom->saveHTML($child);
-    }
-
-    return trim($inner);
+            return '<a href="' . htmlspecialchars($resolved, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '" rel="noopener noreferrer">' . $inner . '</a>';
+        },
+        $html
+    );
 }
 
 function csrf_token(): string

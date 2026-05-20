@@ -39,7 +39,7 @@ foreach ($articles as $article) {
         default => $catEstrategia,
     };
 
-    $content = sanitize_post_html($article['content_html']);
+    $content = blog_prepare_post_content($article['content_html'], $pdo);
     $reading = estimate_reading_time($content);
     $now = gmdate('c');
 

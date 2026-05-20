@@ -76,7 +76,7 @@ foreach ($files as $file) {
             continue;
         }
 
-        $content = sanitize_post_html((string) $article['content_html']);
+        $content = blog_prepare_post_content((string) $article['content_html'], $pdo);
         $reading = estimate_reading_time($content);
         $now = gmdate('c');
 

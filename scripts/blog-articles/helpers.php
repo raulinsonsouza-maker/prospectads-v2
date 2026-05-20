@@ -55,7 +55,9 @@ if (!function_exists('blog_link_label_slug_map')) {
                 foreach ($matches as $match) {
                     $slug = slugify(stripslashes($match[1]));
                     $label = html_entity_decode(stripslashes($match[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                    $key = utf8_strtolower(trim($label));
+                    $key = function_exists('blog_normalize_link_label')
+                        ? blog_normalize_link_label($label)
+                        : utf8_strtolower(trim($label));
                     if ($slug !== '' && $key !== '') {
                         $map[$key] = $slug;
                     }
