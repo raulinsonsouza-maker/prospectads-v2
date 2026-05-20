@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Sincroniza artigos PHP → SQLite (update se slug existir).
- * Uso: php scripts/sync-blog-articles-from-php.php [21-30|all|slug-unico]
+ * Uso: php scripts/sync-blog-articles-from-php.php [21-30|31-40|all|slug-unico]
  */
 
 $root = dirname(__DIR__);
@@ -17,6 +17,9 @@ $map = [
         __DIR__ . '/blog-articles/articles-21-25.php',
         __DIR__ . '/blog-articles/articles-26-30.php',
     ],
+    '31-40' => [
+        __DIR__ . '/blog-articles/articles-31-40.php',
+    ],
     'all' => glob(__DIR__ . '/blog-articles/articles-*.php') ?: [],
 ];
 
@@ -24,16 +27,16 @@ $files = $map[$arg] ?? [];
 if ($files === [] && str_contains($arg, '.php')) {
     $files = [$arg];
 } elseif ($files === [] && preg_match('/^[a-z0-9-]+$/', $arg)) {
-    $files = $map['21-30'];
+    $files = $map['all'];
     $onlySlug = $arg;
 } else {
     $onlySlug = null;
 }
 
-if ($arg !== '21-30' && $arg !== 'all' && !isset($onlySlug)) {
+if ($arg !== '21-30' && $arg !== '31-40' && $arg !== 'all' && !isset($onlySlug)) {
     $onlySlug = preg_match('/^[a-z0-9-]+$/', $arg) ? $arg : null;
     if ($onlySlug === null && !is_file($arg)) {
-        fwrite(STDERR, "Uso: php scripts/sync-blog-articles-from-php.php [21-30|all|slug]\n");
+        fwrite(STDERR, "Uso: php scripts/sync-blog-articles-from-php.php [21-30|31-40|all|slug]\n");
         exit(1);
     }
 }

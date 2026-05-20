@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** Gerado em 2026-05-18T13:49:12+00:00 — não edite à mão */
+/** Gerado em 2026-05-20T12:08:09+00:00 — não edite à mão */
 return array (
   0 => 'aumentar-recompra-ecommerce',
   1 => 'aumentar-ticket-medio-ecommerce-sem-mais-trafego',
@@ -36,4 +36,14 @@ return array (
   29 => 'vale-investir-google-shopping-ecommerce',
   30 => 'vale-pena-contratar-agencia-trafego-ecommerce',
   31 => 'vender-mais-whatsapp-ecommerce',
+  32 => '12-gargalos-crescimento-ecommerce',
+  33 => 'agencia-ecommerce-vale-a-pena',
+  34 => 'checklist-ecommerce-saudavel-25-sinais',
+  35 => 'descobrir-gargalo-antes-investir-anuncios',
+  36 => 'diagnosticar-ecommerce-nao-cresce',
+  37 => 'ecommerce-nao-escala-com-mais-orcamento',
+  38 => 'ecommerce-nao-vende-trafego-site-oferta',
+  39 => 'google-ads-ecommerce-funciona-diagnostico',
+  40 => 'quanto-investir-ecommerce-escalar',
+  41 => 'vale-a-pena-trafego-pago-ecommerce-faturamento',
 );
