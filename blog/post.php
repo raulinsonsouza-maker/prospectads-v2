@@ -44,11 +44,7 @@ $ogImage = !empty($post['featured_image']) ? $base . $post['featured_image'] : b
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <?php blog_render_head_common($metaTitle, $metaDesc, $canonical, 'article'); ?>
-    <?php if (!empty($post['featured_image'])): ?>
-    <meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>">
-    <meta name="twitter:image" content="<?= htmlspecialchars($ogImage) ?>">
-    <?php endif; ?>
+    <?php blog_render_head_common($metaTitle, $metaDesc, $canonical, 'article', $ogImage); ?>
     <meta property="article:published_time" content="<?= htmlspecialchars((string) $post['published_at']) ?>">
     <meta property="article:modified_time" content="<?= htmlspecialchars((string) ($post['updated_at'] ?? $post['published_at'])) ?>">
     <?php if (!empty($post['category_name'])): ?>

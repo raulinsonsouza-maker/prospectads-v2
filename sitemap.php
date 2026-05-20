@@ -47,7 +47,7 @@ $base = site_base_url();
 $urls = [
     [
         'loc' => $base . '/',
-        'lastmod' => sitemap_file_lastmod(__DIR__ . '/index.html'),
+        'lastmod' => sitemap_file_lastmod(__DIR__ . '/index.php') ?? sitemap_file_lastmod(__DIR__ . '/index.html'),
         'priority' => '1.0',
         'changefreq' => 'weekly',
     ],
@@ -81,13 +81,15 @@ while ($row = $stmt->fetch()) {
 }
 
 $catStmt = $pdo->query(
-    "SELECT c.slug FROM blog_categories c
+    "SELECT c.slug, MAX(COALESCE(p.updated_at, p.published_at)) AS lastmod
+     FROM blog_categories c
      INNER JOIN blog_posts p ON p.category_id = c.id AND p.status = 'published'
      GROUP BY c.id"
 );
 while ($cat = $catStmt->fetch()) {
     $urls[] = [
         'loc' => $base . blog_category_path((string) $cat['slug']),
+        'lastmod' => sitemap_lastmod((string) ($cat['lastmod'] ?? '')),
         'priority' => '0.75',
         'changefreq' => 'weekly',
     ];

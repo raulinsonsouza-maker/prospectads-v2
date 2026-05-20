@@ -9,6 +9,11 @@ function blog_default_og_image(): string
     return site_base_url() . '/assets/og-default.svg';
 }
 
+function blog_organization_logo(): string
+{
+    return site_base_url() . '/favicon.svg';
+}
+
 function blog_organization_schema(): array
 {
     $base = site_base_url();
@@ -18,6 +23,7 @@ function blog_organization_schema(): array
         '@id' => $base . '/#organization',
         'name' => 'ProspectAds',
         'url' => $base . '/',
+        'logo' => blog_organization_logo(),
     ];
 }
 
@@ -52,10 +58,10 @@ function blog_render_gtag(): void
     site_render_gtag();
 }
 
-function blog_render_head_common(string $title, string $description, string $canonical, string $type = 'website'): void
+function blog_render_head_common(string $title, string $description, string $canonical, string $type = 'website', ?string $ogImage = null): void
 {
     $description = meta_excerpt($description, 160);
-    $ogImage = blog_default_og_image();
+    $ogImage = $ogImage ?? blog_default_og_image();
     ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,6 +81,7 @@ function blog_render_head_common(string $title, string $description, string $can
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= htmlspecialchars($title) ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($description) ?>">
+    <meta name="twitter:image" content="<?= htmlspecialchars($ogImage) ?>">
     <?php
 }
 

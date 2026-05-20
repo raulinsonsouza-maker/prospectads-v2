@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Agência de marketing para e-commerce que já vende. Tráfego, conversão e escala com foco em ROAS — solicite a análise comercial do seu e-commerce.">
-    <meta name="keywords" content="agência e-commerce, tráfego pago loja virtual, aumentar vendas online, ROAS, análise loja virtual, marketing para e-commerce">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="author" content="ProspectAds">
-    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
-    <meta http-equiv="Expires" content="31536000">
     <title>ProspectAds | Marketing para e-commerce — Tráfego, conversão e vendas</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6Y2YB8KS0F"></script>
@@ -25,13 +22,45 @@
     <meta property="og:description" content="Especialistas em tráfego, conversão e escala de vendas para lojas online. Resultado medido em ROAS e faturamento.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://prospectads.com.br/">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="ProspectAds">
+    <meta property="og:image" content="https://prospectads.com.br/assets/og-default.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ProspectAds | Agência de marketing para e-commerce">
+    <meta name="twitter:description" content="Especialistas em tráfego, conversão e escala de vendas para lojas online. Resultado medido em ROAS e faturamento.">
+    <meta name="twitter:image" content="https://prospectads.com.br/assets/og-default.svg">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "ProspectAds",
-      "description": "Agência de marketing digital especializada em e-commerce e resultado em vendas",
-      "serviceType": ["Marketing para E-commerce", "Gestão de Tráfego Pago", "Otimização de Conversão"]
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://prospectads.com.br/#organization",
+          "name": "ProspectAds",
+          "url": "https://prospectads.com.br/",
+          "logo": "https://prospectads.com.br/favicon.svg"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://prospectads.com.br/#website",
+          "url": "https://prospectads.com.br/",
+          "name": "ProspectAds",
+          "publisher": { "@id": "https://prospectads.com.br/#organization" },
+          "inLanguage": "pt-BR"
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://prospectads.com.br/#service",
+          "name": "ProspectAds",
+          "url": "https://prospectads.com.br/",
+          "description": "Agência de marketing digital especializada em e-commerce e resultado em vendas",
+          "serviceType": ["Marketing para E-commerce", "Gestão de Tráfego Pago", "Otimização de Conversão"],
+          "provider": { "@id": "https://prospectads.com.br/#organization" },
+          "areaServed": "BR"
+        }
+      ]
     }
     </script>
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
@@ -397,6 +426,8 @@
             </div>
         </div>
     </section>
+
+    <!-- HOME_BLOG_RECENT -->
 
     <!-- Contact -->
     <section class="contact" id="contato">

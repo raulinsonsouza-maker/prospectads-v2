@@ -16,18 +16,16 @@ function blog_asset(string $path): string
     return '/' . ltrim($path, '/');
 }
 
-/**
- * URL do artigo via post.php?slug= (funciona com e sem mod_rewrite).
- * Canonical SEO continua em /blog/slug/ via link rel="canonical".
- */
+/** URL canônica do artigo (/blog/slug/). */
 function blog_post_url(string $slug): string
 {
-    return blog_asset('blog/post.php?slug=' . rawurlencode($slug));
+    return blog_asset(ltrim(blog_post_path($slug), '/'));
 }
 
+/** URL canônica da categoria (/blog/categoria/slug/). */
 function blog_category_url(string $slug): string
 {
-    return blog_asset('blog/category.php?slug=' . rawurlencode($slug));
+    return blog_asset(ltrim(blog_category_path($slug), '/'));
 }
 
 /** @param list<array{label: string, slug: string}> $topics */
@@ -57,13 +55,23 @@ function blog_render_hero_topics(array $topics, ?string $activeSlug = null): voi
 
 function blog_head_styles(): void
 {
+    $designSystem = blog_asset('assets/design-system.css');
+    $styles = blog_asset('styles.css');
+    $blogCss = blog_asset('blog/blog.css');
+    $fonts = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';
     ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= htmlspecialchars(blog_asset('assets/design-system.css')) ?>">
-    <link rel="stylesheet" href="<?= htmlspecialchars(blog_asset('styles.css')) ?>">
-    <link rel="stylesheet" href="<?= htmlspecialchars(blog_asset('blog/blog.css')) ?>">
+    <link rel="preload" href="<?= htmlspecialchars($fonts) ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="<?= htmlspecialchars($fonts) ?>" rel="stylesheet"></noscript>
+    <link rel="preload" href="<?= htmlspecialchars($designSystem) ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="<?= htmlspecialchars($styles) ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="<?= htmlspecialchars($blogCss) ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="<?= htmlspecialchars($designSystem) ?>">
+        <link rel="stylesheet" href="<?= htmlspecialchars($styles) ?>">
+        <link rel="stylesheet" href="<?= htmlspecialchars($blogCss) ?>">
+    </noscript>
     <?php
 }
 
