@@ -442,21 +442,126 @@ function sanitize_post_html(string $html): string
     $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
 
+    $anchors = [];
     foreach ($dom->getElementsByTagName('a') as $anchor) {
-        $href = $anchor->getAttribute('href');
+        $anchors[] = $anchor;
+    }
+
+    foreach ($anchors as $anchor) {
+        $href = trim($anchor->getAttribute('href'));
         if ($href === '' || !preg_match('~^(https?:|mailto:|tel:|/|#)~i', $href)) {
-            $anchor->removeAttribute('href');
-        } else {
-            $anchor->setAttribute('rel', 'noopener noreferrer');
-            if (preg_match('#^https?://#i', $href)) {
-                $anchor->setAttribute('target', '_blank');
+            $parent = $anchor->parentNode;
+            if ($parent instanceof DOMElement) {
+                while ($anchor->firstChild) {
+                    $parent->insertBefore($anchor->firstChild, $anchor);
+                }
+                $parent->removeChild($anchor);
             }
+            continue;
+        }
+
+        $anchor->setAttribute('rel', 'noopener noreferrer');
+        if (preg_match('#^https?://#i', $href)) {
+            $anchor->setAttribute('target', '_blank');
         }
     }
 
     $root = $dom->getElementsByTagName('div')->item(0);
     if (!$root) {
         return '';
+    }
+
+    $inner = '';
+    foreach ($root->childNodes as $child) {
+        $inner .= $dom->saveHTML($child);
+    }
+
+    return trim($inner);
+}
+
+/**
+ * Repõe href em âncoras que ficaram só com rel (ex.: após sanitização agressiva no servidor).
+ */
+function blog_restore_content_links(string $html, ?PDO $pdo = null): string
+{
+    if ($html === '' || !str_contains($html, '<a')) {
+        return $html;
+    }
+
+    $labelMap = [];
+    $helpers = dirname(__DIR__) . '/scripts/blog-articles/helpers.php';
+    if (is_file($helpers)) {
+        require_once $helpers;
+        if (function_exists('blog_link_label_slug_map')) {
+            $labelMap = blog_link_label_slug_map();
+        }
+    }
+
+    $titleMap = [];
+    if ($pdo instanceof PDO) {
+        $stmt = $pdo->query("SELECT slug, title FROM blog_posts WHERE status = 'published'");
+        while ($row = $stmt->fetch()) {
+            $slug = (string) $row['slug'];
+            $title = utf8_strtolower(trim((string) $row['title']));
+            if ($slug !== '' && $title !== '') {
+                $titleMap[$title] = $slug;
+            }
+        }
+    }
+
+    $dom = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $wrapped = '<?xml encoding="utf-8" ?><div>' . $html . '</div>';
+    $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors();
+
+    $root = $dom->getElementsByTagName('div')->item(0);
+    if (!$root) {
+        return $html;
+    }
+
+    $anchors = [];
+    foreach ($root->getElementsByTagName('a') as $anchor) {
+        $anchors[] = $anchor;
+    }
+
+    foreach ($anchors as $anchor) {
+        $href = trim($anchor->getAttribute('href'));
+        if ($href !== '' && preg_match('~^(https?:|mailto:|tel:|/|#)~i', $href)) {
+            continue;
+        }
+
+        $text = trim($anchor->textContent ?? '');
+        if ($text === '') {
+            continue;
+        }
+
+        $key = utf8_strtolower($text);
+        $resolved = $labelMap[$key] ?? '';
+
+        if ($resolved === '' && str_contains($key, 'solicitar') && str_contains($key, 'análise')) {
+            $resolved = '/ecommerce-analise/';
+        } elseif ($resolved !== '') {
+            $resolved = blog_post_path($resolved);
+        } elseif ($titleMap !== []) {
+            if (isset($titleMap[$key])) {
+                $resolved = blog_post_path($titleMap[$key]);
+            } else {
+                foreach ($titleMap as $title => $slug) {
+                    if (str_contains($title, $key) || str_contains($key, $title)) {
+                        $resolved = blog_post_path($slug);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($resolved === '') {
+            continue;
+        }
+
+        $anchor->setAttribute('href', $resolved);
+        $anchor->setAttribute('rel', 'noopener noreferrer');
     }
 
     $inner = '';

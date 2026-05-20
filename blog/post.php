@@ -124,7 +124,7 @@ $ogImage = !empty($post['featured_image']) ? $base . $post['featured_image'] : b
             <?php endif; ?>
             <article class="article-main">
                 <div class="article__body">
-                    <?= $post['content_html'] ?>
+                    <?= blog_restore_content_links((string) $post['content_html'], $pdo) ?>
                 </div>
 
                 <div class="article__cta">

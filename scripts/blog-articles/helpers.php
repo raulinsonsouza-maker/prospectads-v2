@@ -26,15 +26,54 @@ function blog_published_slugs(): array
 }
 }
 
-if (!function_exists('blog_link')) {
+if (!function_exists('blog_link_label_slug_map')) {
     /**
-     * Link interno só se o artigo existir na lista publicada; senão retorna texto puro.
+     * Rótulos usados em blog_link() → slug (para restaurar href perdido no HTML salvo).
+     *
+     * @return array<string, string> chave = rótulo em minúsculas
      */
+    function blog_link_label_slug_map(): array
+    {
+        static $map = null;
+        if ($map !== null) {
+            return $map;
+        }
+
+        $map = [];
+        $files = glob(__DIR__ . '/articles-*.php') ?: [];
+        foreach ($files as $file) {
+            $content = file_get_contents($file);
+            if ($content === false) {
+                continue;
+            }
+            if (preg_match_all(
+                "/blog_link\\(\\s*'([^']+)'\\s*,\\s*'((?:[^'\\\\]|\\\\.)*)'\\s*\\)/",
+                $content,
+                $matches,
+                PREG_SET_ORDER
+            )) {
+                foreach ($matches as $match) {
+                    $slug = slugify(stripslashes($match[1]));
+                    $label = html_entity_decode(stripslashes($match[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    $key = utf8_strtolower(trim($label));
+                    if ($slug !== '' && $key !== '') {
+                        $map[$key] = $slug;
+                    }
+                }
+            }
+        }
+
+        return $map;
+    }
+}
+
+if (!function_exists('blog_link')) {
+    /** Link interno para outro artigo do blog (URL canônica /blog/slug/). */
     function blog_link(string $slug, string $label): string
     {
         $slug = slugify($slug);
         $label = htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        if ($slug === '' || !in_array($slug, blog_published_slugs(), true)) {
+        if ($slug === '') {
             return $label;
         }
 
