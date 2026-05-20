@@ -15,6 +15,7 @@ if (!is_file($htmlPath)) {
 }
 
 require __DIR__ . '/includes/home-blog-recent.php';
+require __DIR__ . '/includes/site-gtag.php';
 
 $html = file_get_contents($htmlPath);
 if ($html === false) {
@@ -25,6 +26,7 @@ if ($html === false) {
 
 $recent = home_render_blog_recent_section($pdo, 3);
 $html = str_replace('<!-- HOME_BLOG_RECENT -->', $recent, $html);
+$html = str_replace('<!-- SITE_GTAG -->', site_gtag_markup(), $html);
 
 header('Content-Type: text/html; charset=utf-8');
 echo $html;

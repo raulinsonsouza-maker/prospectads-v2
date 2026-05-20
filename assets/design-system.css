@@ -390,7 +390,6 @@ a.pa-link--muted:hover {
     color: var(--pa-text-muted);
     font-weight: 500;
     font-size: var(--pa-text-sm);
-    transition: color var(--pa-transition);
 }
 
 .nav__menu a:not(.btn):hover,
@@ -945,7 +944,7 @@ body.nav-open .nav__toggle-bar:nth-child(3) {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     body.nav-open .nav__menu {

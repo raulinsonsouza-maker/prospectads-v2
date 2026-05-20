@@ -7,15 +7,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="author" content="ProspectAds">
     <title>ProspectAds | Marketing para e-commerce — Tráfego, conversão e vendas</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6Y2YB8KS0F"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-6Y2YB8KS0F');
-    </script>
+    <!-- SITE_GTAG -->
     <link rel="canonical" href="https://prospectads.com.br/">
     <link rel="alternate" hreflang="pt-BR" href="https://prospectads.com.br/">
     <meta property="og:title" content="ProspectAds | Agência de marketing para e-commerce">
@@ -67,10 +59,10 @@
     <link rel="apple-touch-icon" href="/favicon.svg?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
-    <link rel="preload" href="assets/design-system.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="assets/design-system.css?v=2" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles.css?v=2" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="assets/design-system.css"><link rel="stylesheet" href="styles.css"></noscript>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -101,6 +93,15 @@
         .hero__cta{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:0;margin-top:34px}
         .hero__microcopy{font-size:14px;color:var(--text-gray);font-weight:400;margin-top:8px;text-align:center}
         @media(max-width:640px){.hero{padding:100px 0 50px}.hero__title{font-size:28px;line-height:1.2;padding:0 15px}.hero__description{font-size:17px;padding:0 15px;line-height:1.4}}
+        .pain-direct{padding:100px 0;background:var(--bg-gray);position:relative}
+        .pain-direct__content{max-width:800px;margin:0 auto;text-align:center}
+        .pain-direct__title{font-size:36px;font-weight:800;color:var(--text-dark);margin-bottom:50px;line-height:1.3;min-height:50px}
+        .pain-direct__list{display:flex;flex-direction:column;gap:20px;margin-bottom:0;text-align:left}
+        .pain-direct__item{display:flex;align-items:flex-start;gap:16px;padding:20px;background:var(--bg-card);border-radius:12px;border-left:4px solid var(--primary-color)}
+        .pain-direct__item svg{flex-shrink:0;width:24px;height:24px;color:var(--primary-color);margin-top:2px}
+        .pain-direct__item p{font-size:18px;color:var(--text-gray);line-height:1.6;margin:0}
+        .header--scrolled{box-shadow:0 4px 6px -1px rgba(0,0,0,0.1)}
+        @media(max-width:640px){.pain-direct{padding:60px 0}.pain-direct__title{font-size:28px;padding:0 20px;margin-bottom:40px}.pain-direct__list{gap:20px;padding:0 20px}.pain-direct__item{padding:16px}.pain-direct__item p{font-size:16px}}
     </style>
 </head>
 <body>
@@ -500,7 +501,7 @@
         </svg>
     </a>
 
-    <script src="assets/site-nav.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="assets/site-nav.js?v=2" defer></script>
+    <script src="script.js?v=2" defer></script>
 </body>
 </html>
